@@ -1,0 +1,101 @@
+minimum_cumulusci_version: '3.30.0'
+project:
+    name: IDO-MIDO-TEMPLATE
+    package:
+        name: IDO-MIDO-TEMPLATE
+        api_version: '52.0'
+    git:
+        default_branch: 'main'
+        repo_url: 'https://github.com/SFDO-SE/IDO-MIDO-TEMPLATE'
+    source_format: sfdx
+
+tasks:
+    robot:
+        options:
+            suites: robot/IDO-MIDO-TEMPLATE/tests
+            options:
+                outputdir: robot/IDO-MIDO-TEMPLATE/results
+
+    robot_testdoc:
+        options:
+            path: robot/IDO-MIDO-TEMPLATE/tests
+            output: robot/IDO-MIDO-TEMPLATE/doc/IDO-MIDO-TEMPLATE_tests.html
+
+    run_tests:
+        options:
+            required_org_code_coverage_percent: 75
+
+    #Task to update all users to a given locale - Make sure you amend the TimeZone, Language and Locale settings as well as ensure the profile names are correct
+    config_user_locale:
+        description: 'Runs Anonymous Apex to Update active users local'
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: >
+                List<User> UserList = [SELECT Id FROM User Where IsActive=True AND ProfileId IN (SELECT Id FROM Profile WHERE Name = 'System Administrator' OR Name='*Customer Community' OR Name='*Customer Community - Members' OR Name='Program Management' OR Name='Custom Partner Profile' OR Name='Case Management' OR Name = 'Systemadministrator' OR Name = '*System Admin')];
+                for (User u : UserList) {
+                    u.TimeZoneSidKey = 'Europe/Berlin';
+                    u.LanguageLocaleKey = 'de';
+                    u.LocaleSidKey = 'de';
+                    u.EmailEncodingKey='UTF-8';
+                }
+                update UserList;
+
+    #Project Level Defaults for installing packages
+    update_dependencies:
+        options:
+            security_type: FULL
+    
+    #Project Level Defaults for Loading Data
+    load_dataset:
+        options:
+            ignore_row_errors: True
+            drop_missing_schema: True
+
+
+flows:
+    deploy_unmanaged_ee:
+        steps:
+            6:
+                task: None
+
+    deploy_unmanaged:
+        steps:
+            4:
+                task: None
+
+    install_mido:
+        steps:
+            1:
+                task: unschedule_apex
+                ui_options:
+                    name: Check and Unschedule Apex Jobs
+                    is_required: false
+                    is_recommended: True
+            2:
+                task: deploy
+                options:
+                    path: force-app
+                ui_options:
+                    name: Deploy MIDO Package for deployment into IDO
+            4:
+                task: update_admin_profile
+                ui_options:
+                    name: Update the System Administrator Profile Permissions
+                
+orgs:
+    scratch:
+        dev:
+            config_file: orgs/dev.json
+            #Total number of days (by default) dev scratch orgs will exist for before they expire. Value can be between 1 - 30.
+            days: 30
+            namespaced: false   
+
+plans:
+    deploy_demo:
+        slug: install
+        title: Install NAME OF MIDO PACK HERE
+        tier: primary
+        is_listed: True
+        steps:
+            1:
+                flow: install_mido
