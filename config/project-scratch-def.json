@@ -1,16 +1,16 @@
 {
-    "orgName": "SFDO Insights Campfire",
-    "adminEmail": "sfdocampfires@salesforce.com",
-    "description": "SFDO Insights Campfire",
-    "template": "0TT5f000003Y9BO",
-    "settings": {
-      "lightningExperienceSettings": {
-        "enableS1DesktopEnabled": true
-      },
-      "securitySettings": {
-        "passwordPolicies": {
-          "enableSetPasswordInApi": true
-        }
+  "orgName": "SFDO Insights Campfire",
+  "adminEmail": "sfdocampfires@salesforce.com",
+  "description": "SFDO Insights Campfire",
+  "template": "0TT5f000003Y9BO",
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "securitySettings": {
+      "passwordPolicies": {
+        "enableSetPasswordInApi": true
       }
     }
   }
+}

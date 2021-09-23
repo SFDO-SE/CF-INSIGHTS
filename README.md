@@ -1,12 +1,18 @@
-# IDO-MIDO-TEMPLATE
+# About
 
-Add a brief description of this project here, in Markdown format.
-It will be shown on the main page of the project's GitHub repository.
+This is the Grants Management Campfire Template Repository.
 
-## Development
+## Updating Template ID
 
-To work on this project in a scratch org:
+Update the template value within the config/project-scratch-def.json with the new Trialforce Template ID.
 
-1. [Set up CumulusCI](https://cumulusci.readthedocs.io/en/latest/tutorial.html)
-2. Run `cci flow run dev_org --org dev` to deploy this project.
-3. Run `cci org browser dev` to open the org in your browser.
+## Extend Template Length
+
+There may be times where an extended period is needed for a template. The default being 3 days. You can extend this by editing the command in the orgInit.sh file. Change the entry after the -d to the desired number of days.
+
+e.g. To Update from 3 days to 7, it would look like this sfdx force:org:create -f config/project-scratch-def.json -d 7 -s -w 60
+
+## Related Quip Doc
+
+https://salesforce.quip.com/fu2QAlSw2VrD
+
